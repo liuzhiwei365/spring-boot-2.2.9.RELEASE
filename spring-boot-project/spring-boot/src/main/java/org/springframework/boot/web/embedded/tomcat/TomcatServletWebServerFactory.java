@@ -174,6 +174,13 @@ public class TomcatServletWebServerFactory extends AbstractServletWebServerFacto
 		if (this.disableMBeanRegistry) {
 			Registry.disableRegistry();
 		}
+		/**  tomcat 层级结构 ： Server层、Service层、Engine层、Host层、Context层
+		 * 	 Connector：
+		 *   对应Engine组件，该层是请求分发处理层，可以连接多个Connector。它从Connector接收请求后，解析出可以完成用户请求的URL，
+		 *   根据该URL可以把请求匹配到正确的Host上，当Host处理完用户请求后，Engine层把结果返回给适合的连接器，再由连接器传输给用户。
+		 *   该层的接口一般不需要用户来定制，特殊情况下，用户可以通过实现该接口来提供自定义的引擎
+		 *
+		 * */
 		Tomcat tomcat = new Tomcat();
 		File baseDir = (this.baseDirectory != null) ? this.baseDirectory : createTempDir("tomcat");
 		tomcat.setBaseDir(baseDir.getAbsolutePath());
@@ -187,7 +194,21 @@ public class TomcatServletWebServerFactory extends AbstractServletWebServerFacto
 		for (Connector additionalConnector : this.additionalTomcatConnectors) {
 			tomcat.getService().addConnector(additionalConnector);
 		}
+		/** ServletContextInitializer 是 Servlet
+		 * 首先我们先来看一下它们的全限定名
+		 *
+		 * ServletContainerInitializer（javax.servlet.ServletContainerInitializer）  servlet 3.0 规范
+		 * Servlet容器启动,  初始化的时候 回调
+		 *
+		 * SpringServletContainerInitializer（org.springframework.web.SpringServletContainerInitializer）
+		 * WebApplicationInitializer（org.springframework.web.WebApplicationInitializer）
+		 * SpringBootServletInitializer（org.springframework.boot.web.servlet.support.SpringBootServletInitializer）
+		 * ServletContextInitializer（org.springframework.boot.web.servlet.ServletContextInitializer）
+		 *
+		 *
+		 */
 		prepareContext(tomcat.getHost(), initializers);
+
 		return getTomcatWebServer(tomcat);
 	}
 
@@ -232,7 +253,10 @@ public class TomcatServletWebServerFactory extends AbstractServletWebServerFacto
 			addJspServlet(context);
 			addJasperInitializer(context);
 		}
+
+		//  这里是tomcat 的 listener
 		context.addLifecycleListener(new StaticResourceConfigurer(context));
+
 		ServletContextInitializer[] initializersToUse = mergeInitializers(initializers);
 		host.addChild(context);
 		configureContext(context, initializersToUse);

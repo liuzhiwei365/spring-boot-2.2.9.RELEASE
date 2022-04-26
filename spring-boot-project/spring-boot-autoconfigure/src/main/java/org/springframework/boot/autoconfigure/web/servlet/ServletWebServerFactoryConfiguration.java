@@ -67,12 +67,14 @@ class ServletWebServerFactoryConfiguration {
 	@ConditionalOnMissingBean(value = ServletWebServerFactory.class, search = SearchStrategy.CURRENT)
 	static class EmbeddedTomcat {
 
+		/**  @ConditionalOnMissingBean 完全可以提供自定义的ServletWebServerFactory 实现，替换掉spring boot 的内置实现 */
 		@Bean
 		TomcatServletWebServerFactory tomcatServletWebServerFactory(
 				ObjectProvider<TomcatConnectorCustomizer> connectorCustomizers,
 				ObjectProvider<TomcatContextCustomizer> contextCustomizers,
 				ObjectProvider<TomcatProtocolHandlerCustomizer<?>> protocolHandlerCustomizers) {
 			TomcatServletWebServerFactory factory = new TomcatServletWebServerFactory();
+
 			factory.getTomcatConnectorCustomizers()
 					.addAll(connectorCustomizers.orderedStream().collect(Collectors.toList()));
 			factory.getTomcatContextCustomizers()

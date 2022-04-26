@@ -150,6 +150,7 @@ public class ServletWebServerApplicationContext extends GenericWebApplicationCon
 	protected void onRefresh() {
 		super.onRefresh();
 		try {
+			/** 子类实现扩展逻辑 ，创建web server  */
 			createWebServer();
 		}
 		catch (Throwable ex) {
@@ -177,6 +178,11 @@ public class ServletWebServerApplicationContext extends GenericWebApplicationCon
 		ServletContext servletContext = getServletContext();
 		if (webServer == null && servletContext == null) {
 			ServletWebServerFactory factory = getWebServerFactory();
+			/** 用工厂 创建 web server ,工厂是自动导入的
+			 *  web Server 的启动是在 ApplicationContext 的生命周期方法  finishRefresh 方法中实现的
+			 *
+			 * 该工厂也有多种实现
+			 * */
 			this.webServer = factory.getWebServer(getSelfInitializer());
 		}
 		else if (servletContext != null) {
