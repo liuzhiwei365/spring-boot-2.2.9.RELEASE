@@ -33,6 +33,7 @@ import org.springframework.core.env.ConfigurableEnvironment;
  * @author Madhura Bhave
  * @since 1.2.0
  */
+//AnsiOutputApplicationListener 字符输出监听器, 用于调整控制台显示的打印字符的各种颜色
 public class AnsiOutputApplicationListener
 		implements ApplicationListener<ApplicationEnvironmentPreparedEvent>, Ordered {
 

@@ -38,6 +38,10 @@ import org.springframework.core.ResolvableType;
  * @author Andy Wilkinson
  * @since 2.0.0
  */
+
+/**
+ * 用于把classpath路径以log.debug()输出，略
+ */
 public final class ClasspathLoggingApplicationListener implements GenericApplicationListener {
 
 	private static final int ORDER = LoggingApplicationListener.DEFAULT_ORDER + 1;

@@ -89,6 +89,9 @@ import org.springframework.util.StringUtils;
  * @since 2.0.0
  * @see LoggingSystem#get(ClassLoader)
  */
+/**
+ * 日志监听器, 初始化日志配置
+ * */
 public class LoggingApplicationListener implements GenericApplicationListener {
 
 	private static final ConfigurationPropertyName LOGGING_LEVEL = ConfigurationPropertyName.of("logging.level");

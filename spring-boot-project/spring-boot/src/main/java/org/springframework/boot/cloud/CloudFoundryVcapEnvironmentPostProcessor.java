@@ -112,11 +112,14 @@ public class CloudFoundryVcapEnvironmentPostProcessor
 
 	@Override
 	public void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application) {
+		//如果environment激活了 Cloud Founry
 		if (CloudPlatform.CLOUD_FOUNDRY.isActive(environment)) {
+			//那么添加对Cloud Founry的支持
 			Properties properties = new Properties();
 			JsonParser jsonParser = JsonParserFactory.getJsonParser();
 			addWithPrefix(properties, getPropertiesFromApplication(environment, jsonParser), "vcap.application.");
 			addWithPrefix(properties, getPropertiesFromServices(environment, jsonParser), "vcap.services.");
+			//然后在environment添加一个vcap的配置
 			MutablePropertySources propertySources = environment.getPropertySources();
 			if (propertySources.contains(CommandLinePropertySource.COMMAND_LINE_PROPERTY_SOURCE_NAME)) {
 				propertySources.addAfter(CommandLinePropertySource.COMMAND_LINE_PROPERTY_SOURCE_NAME,

@@ -103,6 +103,14 @@ import org.springframework.util.StringUtils;
  * @author Madhura Bhave
  * @since 1.0.0
  */
+
+
+/**
+ * ConfigFileApplicationListener 是 Spring Boot 中处理配置文件的监听器
+ *
+ *
+ * */
+
 public class ConfigFileApplicationListener implements EnvironmentPostProcessor, SmartApplicationListener, Ordered {
 
 	private static final String DEFAULT_PROPERTIES = "defaultProperties";
@@ -173,6 +181,7 @@ public class ConfigFileApplicationListener implements EnvironmentPostProcessor, 
 
 	@Override
 	public void onApplicationEvent(ApplicationEvent event) {
+		//针对不同的 事件对象有不同的 回调逻辑
 		if (event instanceof ApplicationEnvironmentPreparedEvent) {
 			onApplicationEnvironmentPreparedEvent((ApplicationEnvironmentPreparedEvent) event);
 		}
@@ -184,11 +193,17 @@ public class ConfigFileApplicationListener implements EnvironmentPostProcessor, 
 	private void onApplicationEnvironmentPreparedEvent(ApplicationEnvironmentPreparedEvent event) {
 		// SPI 加载 EnvironmentPostProcessor 的所有实现类
 		List<EnvironmentPostProcessor> postProcessors = loadPostProcessors();
-
 		//把自己也加进来，因为自己也是EnvironmentPostProcessor 的实现类,这点很妙。
 		postProcessors.add(this);
-
+		//通过 AnnotationAwareOrderComparator 控制执行顺序
 		AnnotationAwareOrderComparator.sort(postProcessors);
+		/**
+		 org.springframework.boot.env.EnvironmentPostProcessor=\
+		 org.springframework.boot.cloud.CloudFoundryVcapEnvironmentPostProcessor,\
+		 org.springframework.boot.env.SpringApplicationJsonEnvironmentPostProcessor,\
+		 org.springframework.boot.env.SystemEnvironmentPropertySourceEnvironmentPostProcessor,\
+		 org.springframework.boot.reactor.DebugAgentEnvironmentPostProcessor
+		 */
 		for (EnvironmentPostProcessor postProcessor : postProcessors) {
 			postProcessor.postProcessEnvironment(event.getEnvironment(), event.getSpringApplication());
 		}
