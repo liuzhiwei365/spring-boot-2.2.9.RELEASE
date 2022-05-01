@@ -270,6 +270,9 @@ public class SpringApplication {
 		this.primarySources = new LinkedHashSet<>(Arrays.asList(primarySources));
 		this.webApplicationType = WebApplicationType.deduceFromClasspath();
 		setInitializers((Collection) getSpringFactoriesInstances(ApplicationContextInitializer.class));
+
+		//这步会加载 ConfigFileapplicationListener ,它即是ApplicationListener ，也是EnvironmentPostProcessor。
+		//
 		setListeners((Collection) getSpringFactoriesInstances(ApplicationListener.class));
 		this.mainApplicationClass = deduceMainApplicationClass();
 	}
@@ -353,6 +356,7 @@ public class SpringApplication {
 		configureEnvironment(environment, applicationArguments.getSourceArgs());
 		ConfigurationPropertySources.attach(environment);
 
+		//会触发 ConfigFileApplicationListener 的逻辑，加载配置文件
 		listeners.environmentPrepared(environment);
 		bindToSpringApplication(environment);
 		if (!this.isCustomEnvironment) {

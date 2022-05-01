@@ -182,8 +182,12 @@ public class ConfigFileApplicationListener implements EnvironmentPostProcessor, 
 	}
 
 	private void onApplicationEnvironmentPreparedEvent(ApplicationEnvironmentPreparedEvent event) {
+		// SPI 加载 EnvironmentPostProcessor 的所有实现类
 		List<EnvironmentPostProcessor> postProcessors = loadPostProcessors();
+
+		//把自己也加进来，因为自己也是EnvironmentPostProcessor 的实现类,这点很妙。
 		postProcessors.add(this);
+
 		AnnotationAwareOrderComparator.sort(postProcessors);
 		for (EnvironmentPostProcessor postProcessor : postProcessors) {
 			postProcessor.postProcessEnvironment(event.getEnvironment(), event.getSpringApplication());

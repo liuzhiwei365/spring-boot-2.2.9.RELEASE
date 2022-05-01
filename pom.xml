@@ -11,6 +11,7 @@
 		<module>for-swagger</module>
 		<module>spring-boot-lzw-tests</module>
 		<module>for-datasource</module>
+		<module>spring-boot-project</module>
 	</modules>
 	<packaging>pom</packaging>
 	<name>Spring Boot Build</name>
